@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Play, Send, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Play, Send, ChevronDown, Eye, EyeOff, BarChart3 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
 import type { Theme } from '../App';
@@ -9,9 +9,10 @@ interface SolvePageProps {
   theme: Theme;
   problem: Problem;
   onBack: () => void;
+  onViewReview?: (problem: Problem) => void;
 }
 
-export function SolvePage({ theme, problem, onBack }: SolvePageProps) {
+export function SolvePage({ theme, problem, onBack, onViewReview }: SolvePageProps) {
   const [aiProctorEnabled, setAiProctorEnabled] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('cpp');
   const [code, setCode] = useState(`#include <iostream>
@@ -39,6 +40,8 @@ public:
     setOutput('Submitting solution...\n\nAll test cases passed! ✓\n\nRuntime: 12ms (Beats 87.5%)\nMemory: 10.2MB (Beats 92.1%)');
     setActiveTab('output');
   };
+
+  const isSubmitted = output.includes('All test cases passed');
 
   return (
     <div className="h-screen flex flex-col bg-zinc-50 dark:bg-[#0F0F0F] animate-in fade-in duration-300">
@@ -232,6 +235,15 @@ public:
                 <Send className="w-4 h-4 mr-2" strokeWidth={2} />
                 Submit
               </Button>
+              {isSubmitted && onViewReview && (
+                <Button
+                  onClick={() => onViewReview(problem)}
+                  className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-xl ml-auto shadow-lg hover:shadow-xl hover:shadow-emerald-600/30 transition-all duration-300 animate-in zoom-in"
+                >
+                  <BarChart3 className="w-4 h-4 mr-2" strokeWidth={2} />
+                  View Review & Solutions
+                </Button>
+              )}
             </div>
           </div>
         </div>

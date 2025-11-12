@@ -3,12 +3,13 @@ import { Sidebar } from './components/Sidebar';
 import { PracticeDashboard } from './components/PracticeDashboard';
 import { ChallengeList } from './components/ChallengeList';
 import { SolvePage } from './components/SolvePage';
+import { ReviewPage } from './components/ReviewPage';
 import { Button } from './components/ui/button';
 import type { Problem } from './components/problemsData';
 import { Crown, X, CheckCircle2 } from 'lucide-react';
 
 export type Theme = 'light' | 'dark';
-export type Page = 'dashboard' | 'challenge-list' | 'solve' | 'ai-interviewer';
+export type Page = 'dashboard' | 'challenge-list' | 'solve' | 'review' | 'ai-interviewer';
 
 function App() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -56,6 +57,15 @@ function App() {
     setShowSubscribeDialog(false);
   };
 
+  const handleViewReview = (problem: Problem) => {
+    setSelectedProblem(problem);
+    setCurrentPage('review');
+  };
+
+  const handleBackToSolve = () => {
+    setCurrentPage('solve');
+  };
+
   return (
     <div className={`${theme === 'dark' ? 'dark' : ''}`}>
       <div className="flex h-screen overflow-hidden bg-[#F4F4F5] dark:bg-gradient-to-br dark:from-[#0F0F0F] dark:to-[#1A1A1A] transition-colors duration-300">
@@ -92,6 +102,15 @@ function App() {
               theme={theme}
               problem={selectedProblem}
               onBack={handleBackToList}
+              onViewReview={handleViewReview}
+            />
+          )}
+
+          {currentPage === 'review' && selectedProblem && (
+            <ReviewPage
+              theme={theme}
+              problem={selectedProblem}
+              onBack={handleBackToSolve}
             />
           )}
 
